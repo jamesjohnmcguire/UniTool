@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<Nullable>enable</Nullable>
+		<OutputType>Exe</OutputType>
+		<PublishAot>true</PublishAot>
+		<TargetFramework>net9.0</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Include="C:\Users\JamesMc\Data\UnicodeNormalizer.cs" Link="UnicodeNormalizer.cs" />
+	</ItemGroup>
+
+</Project>
