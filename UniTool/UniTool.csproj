@@ -8,7 +8,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Include="C:\Users\JamesMc\Data\UnicodeNormalizer.cs" Link="UnicodeNormalizer.cs" />
+	  <ProjectReference Include="..\UtilitiesNet\UtilitiesNetLibrary\DigitalZenWorks.Common.Utilities.csproj" />
 	</ItemGroup>
 
 </Project>
