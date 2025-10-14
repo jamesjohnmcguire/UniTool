@@ -161,6 +161,7 @@ namespace UniTool
 
 		private static void ShowCharacterIssue(CharDifference difference)
 		{
+			string positionPadded = $"{difference.Position,3}";
 			char issueChar = difference.Original![0];
 			int issueBits = (int)issueChar;
 			string issueBitsFormatted = $"(U+{issueBits:X4})";
@@ -171,7 +172,8 @@ namespace UniTool
 
 			string message = string.Format(
 				CultureInfo.InvariantCulture,
-				$"  '{0}' {1} → '{2}' {3}",
+				"  Column: {0} '{1}' {2} → '{3}' {4}",
+				positionPadded,
 				difference.Original,
 				issueBitsFormatted,
 				difference.Normalized,
@@ -189,7 +191,7 @@ namespace UniTool
 
 		private static void ShowFileIssue(NormalizationIssue issue)
 		{
-			string message = $"Line {issue.LineNumber}:";
+			string message = $"Line {issue.LineNumber, 4}:";
 
 			Console.WriteLine(message);
 
