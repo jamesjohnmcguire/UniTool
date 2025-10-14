@@ -18,9 +18,9 @@ namespace UniTool
 			}
 			else
 			{
-				string command = args[0].ToLower();
+				string command = args[0];
+				command = command.ToLower();
 				string fileName = args[1];
-				string outputFileName = args[2];
 
 				switch (command)
 				{
@@ -42,6 +42,7 @@ namespace UniTool
 							return;
 						}
 
+						string outputFileName = args[2];
 						ShowNormalizeFileResult(fileName, outputFileName);
 						break;
 
@@ -53,8 +54,10 @@ namespace UniTool
 							return;
 						}
 
-						UnicodeNormalizer.CompareStrings(
-							fileName, outputFileName);
+						string string1 = args[1];
+						string string2 = args[2];
+
+						UnicodeNormalizer.CompareStrings(string1, string2);
 						break;
 
 					default:
