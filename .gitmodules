@@ -1,3 +1,6 @@
 [submodule "UtilitiesNet"]
 	path = UtilitiesNet
 	url = https://github.com/jamesjohnmcguire/UtilitiesNet
+[submodule "DevelopmentTools/DevScripts"]
+	path = DevelopmentTools/DevScripts
+	url = https://github.com/jamesjohnmcguire/DevelopmentTools.git
