@@ -1,37 +1,54 @@
-﻿using DigitalZenWorks.Common.Utilities;
-using DigitalZenWorks.Common.VersionUtilities;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿/////////////////////////////////////////////////////////////////////////////
+// <copyright file="Program.cs" company="James John McGuire">
+// Copyright © 2025 James John McGuire. All Rights Reserved.
+// </copyright>
+/////////////////////////////////////////////////////////////////////////////
 
 namespace UniTool
 {
-	internal class Program
+	using System;
+	using System.Collections.Generic;
+	using System.Globalization;
+	using System.IO;
+	using System.Linq;
+	using System.Text;
+	using DigitalZenWorks.Common.Utilities;
+	using DigitalZenWorks.Common.VersionUtilities;
+
+	/// <summary>
+	/// The program class.
+	/// </summary>
+	internal sealed class Program
 	{
-		static void Main(string[] args)
+		/// <summary>
+		/// The program's main entry point.
+		/// </summary>
+		/// <param name="arguments">An array of arguments passed to
+		/// the program.</param>
+		internal static void Main(string[] arguments)
 		{
 			string version = VersionSupport.GetVersion();
 
 			Console.WriteLine(
 				"Unicode Normalization Tool Version: " + version);
 
-			if (args.Length == 0)
+			if (arguments.Length == 0)
 			{
 				ShowUsage();
 			}
 			else
 			{
-				string command = args[0];
-				command = command.ToLower();
-				string fileName = args[1];
+				string command = arguments[0];
+
+#pragma warning disable CA1308
+				command = command.ToLower(CultureInfo.InvariantCulture);
+#pragma warning restore CA1308
+				string fileName = arguments[1];
 
 				switch (command)
 				{
 					case "check":
-						if (args.Length < 2)
+						if (arguments.Length < 2)
 						{
 							ShowError("Please specify a file path");
 							return;
@@ -41,27 +58,27 @@ namespace UniTool
 						break;
 
 					case "normalize":
-						if (args.Length < 3)
+						if (arguments.Length < 3)
 						{
 							ShowError(
 								"Please specify input and output file paths");
 							return;
 						}
 
-						string outputFileName = args[2];
+						string outputFileName = arguments[2];
 						ShowNormalizeFileResult(fileName, outputFileName);
 						break;
 
 					case "compare":
-						if (args.Length < 3)
+						if (arguments.Length < 3)
 						{
 							ShowError(
 								"Please specify two strings to compare");
 							return;
 						}
 
-						string string1 = args[1];
-						string string2 = args[2];
+						string string1 = arguments[1];
+						string string2 = arguments[2];
 
 						UnicodeNormalizer.CompareStrings(string1, string2);
 						break;
@@ -103,7 +120,7 @@ namespace UniTool
 				}
 			}
 
-			ShowFileIssues(filepath, issues);
+			ShowFileIssues(issues);
 		}
 
 		private static void ShowCompareStrings(string string1, string string2)
@@ -197,7 +214,7 @@ namespace UniTool
 
 		private static void ShowFileIssue(NormalizationIssue issue)
 		{
-			string message = $"Line {issue.LineNumber, 4}:";
+			string message = $"Line {issue.LineNumber,4}:";
 
 			Console.WriteLine(message);
 
@@ -209,8 +226,7 @@ namespace UniTool
 			Console.WriteLine();
 		}
 
-		private static void ShowFileIssues(
-			string filepath, List<NormalizationIssue> issues)
+		private static void ShowFileIssues(List<NormalizationIssue> issues)
 		{
 			string message;
 
