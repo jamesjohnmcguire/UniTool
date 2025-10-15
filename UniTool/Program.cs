@@ -226,7 +226,8 @@ namespace UniTool
 			Console.WriteLine();
 		}
 
-		private static void ShowFileIssues(List<NormalizationIssue> issues)
+		private static void ShowFileIssues(
+			List<NormalizationIssue> issues, int limit = 10)
 		{
 			string message;
 
@@ -245,14 +246,16 @@ namespace UniTool
 				Console.WriteLine(message);
 				Console.WriteLine();
 
-				foreach (NormalizationIssue? issue in issues.Take(10))
+				IEnumerable<NormalizationIssue> limited = issues.Take(limit);
+
+				foreach (NormalizationIssue? issue in limited)
 				{
 					ShowFileIssue(issue);
 				}
 
-				if (issues.Count > 10)
+				if (issues.Count > limit)
 				{
-					int remaining = issues.Count - 10;
+					int remaining = issues.Count - limit;
 					message = $"... and {remaining} more issue(s)";
 					Console.WriteLine(message);
 				}
