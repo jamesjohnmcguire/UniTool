@@ -16,10 +16,18 @@
 
 	<ItemGroup>
 		<PackageReference Include="DigitalZenWorks.Common.VersionUtilities" Version="1.1.14" />
+		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\UtilitiesNet\UtilitiesNetLibrary\DigitalZenWorks.Common.Utilities.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<AdditionalFiles Include="stylecop.json" />
 	</ItemGroup>
 
 </Project>
