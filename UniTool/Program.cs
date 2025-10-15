@@ -1,10 +1,11 @@
-﻿using System;
+﻿using DigitalZenWorks.Common.Utilities;
+using DigitalZenWorks.Common.VersionUtilities;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using DigitalZenWorks.Common.Utilities;
 
 namespace UniTool
 {
@@ -12,6 +13,11 @@ namespace UniTool
 	{
 		static void Main(string[] args)
 		{
+			string version = VersionSupport.GetVersion();
+
+			Console.WriteLine(
+				"Unicode Normalization Tool Version: " + version);
+
 			if (args.Length == 0)
 			{
 				ShowUsage();
