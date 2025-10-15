@@ -43,6 +43,7 @@ namespace UniTool
 #pragma warning disable CA1308
 				command = command.ToLower(CultureInfo.InvariantCulture);
 #pragma warning restore CA1308
+
 				string fileName = arguments[1];
 
 				switch (command)
@@ -51,38 +52,41 @@ namespace UniTool
 						if (arguments.Length < 2)
 						{
 							ShowError("Please specify a file path");
-							return;
 						}
-
-						CheckFile(fileName);
-						break;
-
-					case "normalize":
-						if (arguments.Length < 3)
+						else
 						{
-							ShowError(
-								"Please specify input and output file paths");
-							return;
+							CheckFile(fileName);
 						}
 
-						string outputFileName = arguments[2];
-						ShowNormalizeFileResult(fileName, outputFileName);
 						break;
-
 					case "compare":
 						if (arguments.Length < 3)
 						{
 							ShowError(
 								"Please specify two strings to compare");
-							return;
+						}
+						else
+						{
+							string string1 = arguments[1];
+							string string2 = arguments[2];
+
+							UnicodeNormalizer.CompareStrings(string1, string2);
 						}
 
-						string string1 = arguments[1];
-						string string2 = arguments[2];
-
-						UnicodeNormalizer.CompareStrings(string1, string2);
 						break;
+					case "normalize":
+						if (arguments.Length < 3)
+						{
+							ShowError(
+								"Please specify input and output file paths");
+						}
+						else
+						{
+							string outputFileName = arguments[2];
+							ShowNormalizeFileResult(fileName, outputFileName);
+						}
 
+						break;
 					default:
 						ShowUsage();
 						break;
