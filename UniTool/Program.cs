@@ -77,6 +77,8 @@ namespace UniTool
 				Console.WriteLine($"Checking file: {filepath}");
 				Console.WriteLine();
 
+				NormalizationForm form = GetNormalizationForm(command);
+
 				List<NormalizationIssue> issues = [];
 				int lineNumber = 0;
 
@@ -88,7 +90,7 @@ namespace UniTool
 					lineNumber++;
 
 					NormalizationIssue? issue =
-						UnicodeNormalizer.CheckLine(lineNumber, line);
+						UnicodeNormalizer.CheckLine(lineNumber, line, form);
 
 					if (issue != null)
 					{
@@ -105,7 +107,9 @@ namespace UniTool
 			string string1 = command.Parameters[0];
 			string string2 = command.Parameters[1];
 
-			UnicodeNormalizer.CompareStrings(string1, string2);
+			NormalizationForm form = GetNormalizationForm(command);
+
+			UnicodeNormalizer.CompareStrings(string1, string2, form);
 		}
 
 		private static CommandsSet? GetCommands()
@@ -132,12 +136,46 @@ namespace UniTool
 			return commandsSet;
 		}
 
+		private static NormalizationForm GetNormalizationForm(Command command)
+		{
+			NormalizationForm formType;
+
+			CommandOption option = command.Options[0];
+			string formNotation = option.Parameter;
+			formNotation = formNotation.ToUpperInvariant();
+
+			switch (formNotation)
+			{
+				case "C":
+					formType = NormalizationForm.FormC;
+					break;
+				case "D":
+					formType = NormalizationForm.FormD;
+					break;
+				case "KC":
+					formType = NormalizationForm.FormKC;
+					break;
+				case "KD":
+					formType = NormalizationForm.FormKD;
+					break;
+				default:
+					string message = "Invalid normalization form " +
+						formNotation + "Valid options are: C, D, KC, KD";
+					ArgumentException exception = new (message);
+					throw exception;
+			}
+
+			return formType;
+		}
+
 		private static void Normalize(Command command)
 		{
 			string inputFile = command.Parameters[0];
 			string outputFile = command.Parameters[1];
 
-			ShowNormalizeFileResult(inputFile, outputFile);
+			NormalizationForm form = GetNormalizationForm(command);
+
+			ShowNormalizeFileResult(inputFile, outputFile, form);
 		}
 
 		private static void ShowCompareStrings(string string1, string string2)
@@ -184,17 +222,17 @@ namespace UniTool
 
 			Console.WriteLine();
 
-			bool isEqual = UnicodeNormalizer.CompareStrings(
-				normalizedString1, normalizedString2);
+			//bool isEqual = UnicodeNormalizer.CompareStrings(
+			//	normalizedString1, normalizedString2);
 
-			if (isEqual == true)
-			{
-				message = "✓ Strings are equivalent after normalization";
-			}
-			else
-			{
-				message = "✗ Strings are different even after normalization";
-			}
+			//if (isEqual == true)
+			//{
+			//	message = "✓ Strings are equivalent after normalization";
+			//}
+			//else
+			//{
+			//	message = "✗ Strings are different even after normalization";
+			//}
 
 			Console.WriteLine(message);
 		}
@@ -282,12 +320,12 @@ namespace UniTool
 		}
 
 		private static void ShowNormalizeFileResult(
-			string inputPath, string outputPath)
+			string inputPath, string outputPath, NormalizationForm form)
 		{
 			Console.WriteLine($"Normalizing: {inputPath} → {outputPath}");
 
 			int linesChanged = UnicodeNormalizer.NormalizeFile(
-				inputPath, outputPath, out int linesProcessed);
+				inputPath, outputPath, out int linesProcessed, form);
 
 			if (linesChanged == -1)
 			{

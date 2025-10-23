@@ -6,6 +6,14 @@
 	{
 		"command": "check",
 		"description": "Check file for non-normalized text",
+		"options":
+		[
+			{
+				"shortName": "f",
+				"longName": "form",
+				"requiresParameter": true
+			}
+		],
 		"parameters":
 		[
 			"file path"
@@ -14,6 +22,14 @@
 	{
 		"command": "compare",
 		"description": "Compare two strings and show Unicode information",
+		"options":
+		[
+			{
+				"shortName": "f",
+				"longName": "form",
+				"requiresParameter": true
+			}
+		],
 		"parameters":
 		[
 			"string 1",
@@ -23,6 +39,14 @@
 	{
 		"command": "normalize",
 		"description": "Normalize file to NFKC form",
+		"options":
+		[
+			{
+				"shortName": "f",
+				"longName": "form",
+				"requiresParameter": true
+			}
+		],
 		"parameterCount": 2,
 		"parameters":
 		[
