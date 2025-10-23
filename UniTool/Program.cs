@@ -12,6 +12,7 @@ namespace UniTool
 	using System.IO;
 	using System.Linq;
 	using System.Text;
+	using DigitalZenWorks.CommandLine.Commands;
 	using DigitalZenWorks.Common.Utilities;
 	using DigitalZenWorks.Common.VersionUtilities;
 
@@ -28,103 +29,115 @@ namespace UniTool
 		internal static void Main(string[] arguments)
 		{
 			string version = VersionSupport.GetVersion();
+			string message = "Unicode Normalization Tool Version: " + version;
 
-			Console.WriteLine(
-				"Unicode Normalization Tool Version: " + version);
+			Console.WriteLine(message);
 
-			if (arguments.Length == 0)
+			CommandsSet? commands = GetCommands();
+
+			CommandLineInstance commandLine = new (commands, arguments);
+
+			if (commandLine.ValidArguments == false)
 			{
-				ShowUsage();
+				ShowError(commandLine.ErrorMessage);
+				commandLine.ShowHelp();
 			}
 			else
 			{
-				string command = arguments[0];
+				Command command = commandLine.Command;
 
-#pragma warning disable CA1308
-				command = command.ToLower(CultureInfo.InvariantCulture);
-#pragma warning restore CA1308
-
-				string fileName = arguments[1];
-
-				switch (command)
+				switch (command.Name)
 				{
 					case "check":
-						if (arguments.Length < 2)
-						{
-							ShowError("Please specify a file path");
-						}
-						else
-						{
-							CheckFile(fileName);
-						}
-
+						CheckFile(command);
 						break;
 					case "compare":
-						if (arguments.Length < 3)
-						{
-							ShowError(
-								"Please specify two strings to compare");
-						}
-						else
-						{
-							string string1 = arguments[1];
-							string string2 = arguments[2];
-
-							UnicodeNormalizer.CompareStrings(string1, string2);
-						}
-
+						CompareStrings(command);
 						break;
 					case "normalize":
-						if (arguments.Length < 3)
-						{
-							ShowError(
-								"Please specify input and output file paths");
-						}
-						else
-						{
-							string outputFileName = arguments[2];
-							ShowNormalizeFileResult(fileName, outputFileName);
-						}
-
+						Normalize(command);
 						break;
 					default:
-						ShowUsage();
+						commandLine.ShowHelp("Unicode Normalization Tool");
 						break;
 				}
 			}
 		}
 
-		private static void CheckFile(string filepath)
+		private static void CheckFile(Command command)
 		{
+			string filepath = command.Parameters[0];
+
 			if (!File.Exists(filepath))
 			{
-				Console.WriteLine($"Error: File not found: {filepath}");
-				return;
+				ShowError($"File not found: {filepath}");
 			}
-
-			Console.WriteLine($"Checking file: {filepath}");
-			Console.WriteLine();
-
-			var issues = new List<NormalizationIssue>();
-			int lineNumber = 0;
-
-			IEnumerable<string> lines =
-				File.ReadLines(filepath, Encoding.UTF8);
-
-			foreach (string line in lines)
+			else
 			{
-				lineNumber++;
+				Console.WriteLine($"Checking file: {filepath}");
+				Console.WriteLine();
 
-				NormalizationIssue? issue =
-					UnicodeNormalizer.CheckLine(lineNumber, line);
+				List<NormalizationIssue> issues = [];
+				int lineNumber = 0;
 
-				if (issue != null)
+				IEnumerable<string> lines =
+					File.ReadLines(filepath, Encoding.UTF8);
+
+				foreach (string line in lines)
 				{
-					issues.Add(issue);
+					lineNumber++;
+
+					NormalizationIssue? issue =
+						UnicodeNormalizer.CheckLine(lineNumber, line);
+
+					if (issue != null)
+					{
+						issues.Add(issue);
+					}
 				}
+
+				ShowFileIssues(issues);
+			}
+		}
+
+		private static void CompareStrings(Command command)
+		{
+			string string1 = command.Parameters[0];
+			string string2 = command.Parameters[1];
+
+			UnicodeNormalizer.CompareStrings(string1, string2);
+		}
+
+		private static CommandsSet? GetCommands()
+		{
+			CommandsSet? commandsSet;
+
+			string tempPath = Path.GetTempPath();
+			string path = Path.Combine(tempPath, "commands.json");
+
+			bool result = FileUtils.CreateFileFromEmbeddedResource(
+				"UniTool.commands.json",
+				path);
+
+			if (result == false)
+			{
+				throw new FileNotFoundException();
+			}
+			else
+			{
+				commandsSet = new ();
+				commandsSet.JsonFromFile(path);
 			}
 
-			ShowFileIssues(issues);
+			return commandsSet;
+		}
+
+		private static void Normalize(Command command)
+		{
+			string inputFile = command.Parameters[0];
+			string outputFile = command.Parameters[1];
+
+			ShowNormalizeFileResult(inputFile, outputFile);
 		}
 
 		private static void ShowCompareStrings(string string1, string string2)
@@ -212,8 +225,10 @@ namespace UniTool
 		private static void ShowError(string message)
 		{
 			message = "Error: " + message;
-
+			Console.WriteLine();
+			Console.ForegroundColor = ConsoleColor.Red;
 			Console.WriteLine(message);
+			Console.ResetColor();
 		}
 
 		private static void ShowFileIssue(NormalizationIssue issue)
@@ -331,22 +346,6 @@ namespace UniTool
 
 				ShowUnicodeCharacterNormalization(character);
 			}
-		}
-
-		private static void ShowUsage()
-		{
-			Console.WriteLine("Unicode Normalization Tool");
-			Console.WriteLine("==========================");
-			Console.WriteLine();
-			Console.WriteLine("Usage:");
-			Console.WriteLine("  check <filepath>              - Check CSV file for non-normalized text");
-			Console.WriteLine("  normalize <input> <output>    - Normalize CSV file to NFKC form");
-			Console.WriteLine("  compare <string1> <string2>   - Compare two strings and show Unicode info");
-			Console.WriteLine();
-			Console.WriteLine("Examples:");
-			Console.WriteLine("  UnicodeTool check data.csv");
-			Console.WriteLine("  UnicodeTool normalize input.csv output.csv");
-			Console.WriteLine("  UnicodeTool compare \"⽷\" \"糸\"");
 		}
 	}
 }
