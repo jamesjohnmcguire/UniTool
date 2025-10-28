@@ -15,8 +15,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DigitalZenWorks.CommandLine.Commands" Version="1.5.14" />
+		<PackageReference Include="DigitalZenWorks.CommandLine.Commands" Version="1.5.18" />
 		<PackageReference Include="DigitalZenWorks.Common.VersionUtilities" Version="1.1.14" />
+		<PackageReference Include="NewtonSoft.Json" Version="13.0.4" />
 		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
