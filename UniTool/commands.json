@@ -6,16 +6,15 @@
 	{
 		"command": "check",
 		"description": "Check file for non-normalized text",
-		"options":
-		[
+		"options": [
 			{
 				"shortName": "f",
 				"longName": "form",
 				"requiresParameter": true
 			}
 		],
-		"parameters":
-		[
+		"parameterCount": 1,
+		"parameters": [
 			"file path"
 		]
 	},
@@ -27,7 +26,7 @@
 			{
 				"shortName": "f",
 				"longName": "form",
-				"requiresParameter": true
+				"RequiresParameter": true
 			}
 		],
 		"parameters":
@@ -38,16 +37,16 @@
 	},
 	{
 		"command": "normalize",
-		"description": "Normalize file to NFKC form",
+		"description": "Normalize file to specified form",
 		"options":
 		[
 			{
 				"shortName": "f",
 				"longName": "form",
-				"requiresParameter": true
+				"RequiresParameter": true
 			}
 		],
-		"parameterCount": 2,
+		"ParameterCount": 2,
 		"parameters":
 		[
 			"input file path",
