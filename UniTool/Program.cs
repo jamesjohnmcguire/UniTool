@@ -52,7 +52,7 @@ namespace UniTool
 						CheckFile(command);
 						break;
 					case "compare":
-						CompareStrings(command);
+						ShowCompareStrings(command);
 						break;
 					case "normalize":
 						Normalize(command);
@@ -178,8 +178,13 @@ namespace UniTool
 			ShowNormalizeFileResult(inputFile, outputFile, form);
 		}
 
-		private static void ShowCompareStrings(string string1, string string2)
+		private static void ShowCompareStrings(Command command)
 		{
+			string string1 = command.Parameters[0];
+			string string2 = command.Parameters[1];
+
+			NormalizationForm form = GetNormalizationForm(command);
+
 			string? message;
 
 			Console.WriteLine("String Comparison:");
@@ -194,17 +199,15 @@ namespace UniTool
 			ShowUnicodeInformation(string2);
 			Console.WriteLine();
 
-			string normalizedString1 =
-				string1.Normalize(NormalizationForm.FormKC);
-			string normalizedString2 =
-				string2.Normalize(NormalizationForm.FormKC);
+			string normalizedString1 = string1.Normalize(form);
+			string normalizedString2 = string2.Normalize(form);
 
 			string? normalizedHexString1 =
 				UnicodeNormalizer.GetHexadecimalString(normalizedString1);
 			string? normalizedHexString2 =
 				UnicodeNormalizer.GetHexadecimalString(normalizedString2);
 
-			Console.WriteLine("After Form KC Normalization:");
+			Console.WriteLine("After Normalization:");
 
 			message = string.Format(
 				CultureInfo.InvariantCulture,
@@ -222,17 +225,17 @@ namespace UniTool
 
 			Console.WriteLine();
 
-			//bool isEqual = UnicodeNormalizer.CompareStrings(
-			//	normalizedString1, normalizedString2);
+			bool isEqual = UnicodeNormalizer.CompareStrings(
+				normalizedString1, normalizedString2, form);
 
-			//if (isEqual == true)
-			//{
-			//	message = "✓ Strings are equivalent after normalization";
-			//}
-			//else
-			//{
-			//	message = "✗ Strings are different even after normalization";
-			//}
+			if (isEqual == true)
+			{
+				message = "✓ Strings are equivalent after normalization";
+			}
+			else
+			{
+				message = "✗ Strings are different even after normalization";
+			}
 
 			Console.WriteLine(message);
 		}
@@ -290,7 +293,8 @@ namespace UniTool
 
 			if (issues.Count == 0)
 			{
-				message = "✓ All text is properly normalized (Form KC)";
+				message =
+					"✓ All text is properly normalized to the given form";
 				Console.WriteLine(message);
 			}
 			else
