@@ -4,7 +4,7 @@
 		<AnalysisMode>All</AnalysisMode>
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
 		<Authors>James John McGuire</Authors>
-		<Copyright>Copyright © 2025 James John McGuire</Copyright>
+		<Copyright>Copyright © 2025 - 2026 James John McGuire</Copyright>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<FileVersion>1.1.7.0</FileVersion>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
